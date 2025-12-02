@@ -21,3 +21,104 @@ enum Channel {
   whatsapp
 }
 
+model Organization {
+  id   String @id @default(uuid())
+  name String @unique
+
+  users  User[]
+  groups NotificationGroup[]
+  topics NotificationTopic[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id    String @id @default(uuid())
+  email String
+  role  Role
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  groupPreferences GroupPreference[]
+  topicPreferences TopicChannelPreference[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([organizationId, email])
+  @@index([organizationId])
+  @@index([organizationId, role])
+}
+
+model NotificationGroup {
+  id   String @id @default(uuid())
+  name String
+
+  organizationId   String
+  organization     Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  topics           NotificationTopic[]
+  groupPreferences GroupPreference[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+}
+
+model NotificationTopic {
+  id   String @id @default(uuid())
+  name String
+
+  groupId        String
+  organizationId String
+  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  group          NotificationGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  topicPreferences TopicChannelPreference[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([groupId, name])
+  @@index([groupId])
+  @@index([organizationId])
+}
+
+model GroupPreference {
+  id      String  @id @default(uuid())
+  enabled Boolean @default(true)
+
+  userId  String
+  groupId String
+  user    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group   NotificationGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, groupId])
+  @@index([userId])
+  @@index([groupId])
+}
+
+model TopicChannelPreference {
+  id      String  @id @default(uuid())
+  enabled Boolean @default(false)
+
+  userId  String
+  topicId String
+  channel Channel
+  user    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic   NotificationTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, topicId, channel])
+  @@index([userId])
+  @@index([topicId])
+  @@index([userId, topicId])
+}

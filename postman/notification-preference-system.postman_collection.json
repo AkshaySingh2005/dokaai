@@ -1,0 +1,254 @@
+{
+  "info": {
+    "_postman_id": "f83d9b2e-4420-4c9a-b40d-01b2a6ec7ae2",
+    "name": "Notification Preference System – API Test Suite (RBAC Enabled)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - Organizations",
+      "item": [
+        {
+          "name": "Create Organization",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dokaai\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orgs",
+              "host": ["{{baseUrl}}"],
+              "path": ["orgs"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.environment.set('orgId', json.id);",
+                  "pm.test('Organization created', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "02 - Users",
+      "item": [
+        {
+          "name": "Create Admin User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin1@megacorp.com\",\n  \"role\": \"ADMIN\",\n  \"organizationId\": \"{{orgId}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.environment.set('adminId', pm.response.json().id);",
+                  "pm.test('Admin created', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create Customer 1",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"cust1@megacorp.com\",\n  \"role\": \"CUSTOMER\",\n  \"organizationId\": \"{{orgId}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": ["pm.environment.set('cust1', pm.response.json().id);"]
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "03 - Groups (Admin Only)",
+      "item": [
+        {
+          "name": "Create Promotions Group (Admin Only)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Promotions\",\n  \"organizationId\": \"{{orgId}}\",\n  \"userId\": \"{{adminId}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/groups",
+              "host": ["{{baseUrl}}"],
+              "path": ["groups"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.environment.set('groupPromo', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "04 - Topics (Admin Only)",
+      "item": [
+        {
+          "name": "Create Topic - New Offers (Admin Only)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Offers\",\n  \"groupId\": \"{{groupPromo}}\",\n  \"organizationId\": \"{{orgId}}\",\n  \"userId\": \"{{adminId}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/topics",
+              "host": ["{{baseUrl}}"],
+              "path": ["topics"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.environment.set('topicOffers', pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "05 - Preferences",
+      "item": [
+        {
+          "name": "Get User Preferences",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/preferences/user/{{cust1}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["preferences", "user", "{{cust1}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Group Preference",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enabled\": true,\n  \"organizationId\": \"{{orgId}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/preferences/group/{{groupPromo}}/user/{{cust1}}",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "preferences",
+                "group",
+                "{{groupPromo}}",
+                "user",
+                "{{cust1}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Topic-Channel (email ON)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"channel\": \"email\",\n  \"enabled\": true,\n  \"organizationId\": \"{{orgId}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/preferences/topic/{{topicOffers}}/user/{{cust1}}",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "preferences",
+                "topic",
+                "{{topicOffers}}",
+                "user",
+                "{{cust1}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "06 - Decision Engine",
+      "item": [
+        {
+          "name": "Decision - Customer1 (email)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{cust1}}\",\n  \"topicId\": \"{{topicOffers}}\",\n  \"channel\": \"email\",\n  \"organizationId\": \"{{orgId}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/preferences/decision",
+              "host": ["{{baseUrl}}"],
+              "path": ["preferences", "decision"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

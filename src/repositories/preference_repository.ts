@@ -1,4 +1,4 @@
-import { Channel } from "../../generated/prisma/index.js";
+import { Channel } from "@prisma/client";
 import { prisma } from "../prisma/prismaClient.js";
 
 interface UpsertGroupPrefInput {

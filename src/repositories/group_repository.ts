@@ -6,8 +6,7 @@ interface CreateGroupInput {
 }
 
 export class GroupRepository {
-  
-    async create(data: CreateGroupInput) {
+  async create(data: CreateGroupInput) {
     return prisma.notificationGroup.create({
       data,
     });

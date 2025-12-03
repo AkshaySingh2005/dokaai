@@ -1,19 +1,12 @@
 import { Router } from "express";
+import { userController } from "../controlllers/user_controller.js";
 
 const router = Router();
 
-// Create User (Admin / Customer)
-router.post("/", async (req, res) => {
-  //
+// Create user
+router.post("/", userController.createUser);
 
-  return res.status(501).json({ message: "Not implemented: create user" });
-});
-
-// Fetch user details
-router.get("/:userId", async (req, res) => {
-  //
-
-  return res.status(501).json({ message: "Not implemented: fetch user" });
-});
+// Get user
+router.get("/:userId", userController.getUser);
 
 export default router;

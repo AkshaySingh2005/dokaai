@@ -1,39 +1,24 @@
 import { Router } from "express";
+import { preferenceController } from "../controlllers/preference_controller.js";
 
 const router = Router();
 
-// For a user x , fetch groups + topics + channel preferences
-router.get("/user/:userId", async (req, res) => {
-  //
+// Get all preferences for user
+router.get("/user/:userId", preferenceController.getUserPreferences);
 
-  return res
-    .status(501)
-    .json({ message: "Not implemented: fetch user preferences" });
-});
+// Update group preference
+router.put(
+  "/group/:groupId/user/:userId",
+  preferenceController.updateGroupPreference
+);
 
-// Setting up the Group preferences true/false
-router.put("/group/:groupId/user/:userId", async (req, res) => {
-  //
+// Update topic-channel preference
+router.put(
+  "/topic/:topicId/user/:userId",
+  preferenceController.updateTopicChannelPreference
+);
 
-  return res
-    .status(501)
-    .json({ message: "Not implemented: update group preference" });
-});
-
-// Setting up the channel preferences true/false
-router.put("/topic/:topicId/user/:userId", async (req, res) => {
-  //
-
-  return res
-    .status(501)
-    .json({ message: "Not implemented: update topic channel preferences" });
-});
-
-// Decision
-router.post("/decision", async (req, res) => {
-  //
-
-  return res.status(501).json({ message: "Not implemented: decision logic" });
-});
+// Decision logic
+router.post("/decision", preferenceController.decision);
 
 export default router;

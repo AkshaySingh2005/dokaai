@@ -1,25 +1,13 @@
 import { Router } from "express";
+import { organizationController } from "../controlllers/organization_controller.js";
+
 
 const router = Router();
 
-// Create Organization
+// Create organization
+router.post("/", organizationController.createOrganization);
 
-router.post("/", async (req, res) => {
-  //
-
-  return res
-    .status(501)
-    .json({ message: "Not implemented: create organization" });
-});
-
-// Fetching customers by org
-
-router.get("/:orgId/customers", async (req, res) => {
-  //
-
-  return res
-    .status(501)
-    .json({ message: "Not implemented: fetch customers of organization" });
-});
+// Get customers of an organization
+router.get("/:orgId/customers", organizationController.getOrganizationCustomers);
 
 export default router;

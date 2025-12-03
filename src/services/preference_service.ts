@@ -3,7 +3,7 @@ import { groupRepository } from "../repositories/group_repository.js";
 import { organizationRepository } from "../repositories/organization_repository.js";
 import { topicRepository } from "../repositories/topic_repository.js";
 import { userRepository } from "../repositories/user_repository.js";
-import { Channel } from "../../generated/prisma/index.js";
+import { Channel } from "@prisma/client";
 
 interface UpdateGroupPrefInput {
   userId: string;

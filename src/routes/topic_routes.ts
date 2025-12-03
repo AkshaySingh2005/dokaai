@@ -1,11 +1,9 @@
 import { Router } from "express";
+import { topicController } from "../controlllers/topic_controller.js";
 
 const router = Router();
 
-// Create topic in a group under an org
-router.post("/", async (req, res) => {
-  //
-  return res.status(501).json({ message: "Not implemented: create topic" });
-});
+// Create topic inside a group
+router.post("/", topicController.createTopic);
 
 export default router;

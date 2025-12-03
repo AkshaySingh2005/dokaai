@@ -1,9 +1,10 @@
 import { Router } from "express";
-import orgRoutes from "./org_routes.js";
-import userRoutes from "./user_routes.js";
-import groupRoutes from "./group_routes.js";
-import topicRoutes from "./topic_routes.js";
-import preferenceRoutes from "./preference_routes.js";
+
+import orgRoutes from "../routes/org_routes.js";
+import userRoutes from "../routes/user_routes.js";
+import groupRoutes from "../routes/group_routes.js";
+import topicRoutes from "../routes/topic_routes.js";
+import preferenceRoutes from "../routes/preference_routes.js";
 
 const router = Router();
 

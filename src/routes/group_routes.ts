@@ -1,21 +1,12 @@
 import { Router } from "express";
+import { groupController } from "../controlllers/group_controller.js";
 
 const router = Router();
 
-// create group under an organization
-router.post("/", async (req, res) => {
-  //
+// Create Notification Group
+router.post("/", groupController.createGroup);
 
-  return res.status(501).json({ message: "Not implemented: create group" });
-});
-
-// Fetch all groups + topics
-router.get("/org/:orgId", async (req, res) => {
-  //
-
-  return res
-    .status(501)
-    .json({ message: "Not implemented: fetch groups + topics for org" });
-});
+// Get all groups + topics for an org
+router.get("/org/:orgId", groupController.getGroupsWithTopics);
 
 export default router;

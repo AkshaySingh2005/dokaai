@@ -71,6 +71,12 @@ Rules:
 
 ---
 
+## 📊 Database Schema (ER Diagram)
+
+Below is the complete Entity-Relationship Diagram for the Notification Preference System:
+
+![Notification Preference Schema](./schema.png)
+
 ## 📂 Project Structure
 
 ```
